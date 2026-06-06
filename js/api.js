@@ -14,7 +14,7 @@ async function fetchBusinesses({ city, state, country, category, limit }) {
     api_key: serpKey,
   });
 
-  const res  = await fetch(`https://serpapi.com/search.json?${params}`);
+  const res = await fetch(`https://serpapi.com/search?${params}`);
   const data = await res.json();
 
   if (data.error) throw new Error(data.error);
