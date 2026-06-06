@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>LeadSpy — Local Business Lead Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+<div class="app">
+
+  <!-- TOPBAR -->
+  <nav class="topbar">
+    <div class="logo">
+      <div class="logo-icon">L</div>
+      <span class="logo-name">Lead<span>Spy</span></span>
+    </div>
+    <div class="topbar-nav">
+      <button class="nav-btn active" onclick="showPage('search')">🔍 Search</button>
+      <button class="nav-btn" onclick="showPage('config')">⚙️ Config</button>
+    </div>
+    <button class="config-btn" onclick="showPage('config')">
+      <span class="key-dot" id="keyDot"></span>
+      <span id="keyLabel">API Key</span>
+    </button>
+  </nav>
+
+  <!-- SEARCH PAGE -->
+  <div class="page active" id="page-search">
+    <div class="search-hero">
+      <h1>Find Businesses <span>Without Websites</span></h1>
+      <p>Real-time Google Maps data to surface high-value local leads ready for your pitch.</p>
+    </div>
+
+    <div class="search-panel">
+      <div class="search-grid">
+        <div class="field">
+          <label>Country</label>
+          <select id="s-country">
+            <option value="us">🇺🇸 United States</option>
+            <option value="br">🇧🇷 Brazil</option>
+            <option value="gb">🇬🇧 United Kingdom</option>
+            <option value="ca">🇨🇦 Canada</option>
+            <option value="au">🇦🇺 Australia</option>
+            <option value="mx">🇲🇽 Mexico</option>
+            <option value="de">🇩🇪 Germany</option>
+            <option value="fr">🇫🇷 France</option>
+            <option value="es">🇪🇸 Spain</option>
+            <option value="pt">🇵🇹 Portugal</option>
+            <option value="ar">🇦🇷 Argentina</option>
+            <option value="co">🇨🇴 Colombia</option>
+            <option value="in">🇮🇳 India</option>
+            <option value="ng">🇳🇬 Nigeria</option>
+            <option value="za">🇿🇦 South Africa</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>State / Region</label>
+          <input type="text" id="s-state" placeholder="e.g. Florida"/>
+        </div>
+        <div class="field">
+          <label>City</label>
+          <input type="text" id="s-city" placeholder="e.g. Miami" required/>
+        </div>
+      </div>
+
+      <div class="search-grid-2">
+        <div class="field">
+          <label>Category</label>
+          <select id="s-category">
+            <option value="Barbershop">Barbershop</option>
+            <option value="Restaurant">Restaurant</option>
+            <option value="Dentist">Dentist</option>
+            <option value="Gym">Gym</option>
+            <option value="Beauty Salon">Beauty Salon</option>
+            <option value="Pet Shop">Pet Shop</option>
+            <option value="Auto Repair">Auto Repair</option>
+            <option value="Law Firm">Law Firm</option>
+            <option value="Real Estate">Real Estate</option>
+            <option value="Pharmacy">Pharmacy</option>
+            <option value="Nail Salon">Nail Salon</option>
+            <option value="Tattoo Shop">Tattoo Shop</option>
+            <option value="Electrician">Electrician</option>
+            <option value="Plumber">Plumber</option>
+            <option value="Accountant">Accountant</option>
+            <option value="Cleaning Service">Cleaning Service</option>
+            <option value="Bakery">Bakery</option>
+            <option value="Florist">Florist</option>
+            <option value="Hotel">Hotel</option>
+            <option value="Coffee Shop">Coffee Shop</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Custom Category</label>
+          <input type="text" id="s-custom" placeholder="Override category..."/>
+        </div>
+        <div class="field">
+          <label>Results</label>
+          <select id="s-limit">
+            <option value="10">10 results</option>
+            <option value="20" selected>20 results</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Filter</label>
+          <select id="s-filter" onchange="applyFilter()">
+            <option value="all">All businesses</option>
+            <option value="no-website">No website only</option>
+            <option value="has-website">Has website only</option>
+          </select>
+        </div>
+        <button class="search-btn" id="searchBtn" onclick="doSearch()">Search</button>
+      </div>
+    </div>
+
+    <div class="results-area" id="resultsArea">
+      <div class="state-box" id="emptyState">
+        <div class="state-icon">🗺️</div>
+        <div class="state-title">Ready to search</div>
+        <div class="state-sub">Configure your SerpApi key, pick a city and category, then hit Search.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIG PAGE -->
+  <div class="page" id="page-config">
+    <div class="config-page">
+      <h2>⚙️ Configuration</h2>
+      <p>Set up your API key to start finding real local business leads.</p>
+
+      <div class="config-card">
+        <h3>🔑 SerpApi Key</h3>
+        <p>Used to fetch real Google Maps business data. Get your free key at
+          <a href="https://serpapi.com" target="_blank">serpapi.com</a> —
+          100 searches/month free, no credit card required.
+        </p>
+        <div class="key-input-wrap">
+          <input class="key-input" type="password" id="serpKeyInput" placeholder="Paste your SerpApi key..."/>
+          <button class="save-key-btn" onclick="saveKey()">Save</button>
+        </div>
+        <div class="key-status" id="keyStatus"></div>
+      </div>
+
+      <div class="how-to">
+        <h3>How to get your SerpApi key</h3>
+        <ol>
+          <li>Visit <a href="https://serpapi.com/users/sign_up" target="_blank">serpapi.com/users/sign_up</a></li>
+          <li>Create a free account with your email (no credit card needed)</li>
+          <li>Go to your dashboard → click <strong>API Key</strong></li>
+          <li>Copy the key and paste it above</li>
+          <li>You get <strong>100 free searches/month</strong> on the free plan</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay hidden" id="detailModal">
+  <div class="modal" id="detailContent"></div>
+</div>
+
+<!-- PROMPT MODAL -->
+<div class="modal-overlay hidden" id="promptModal">
+  <div class="modal prompt-modal" id="promptContent"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/score.js"></script>
+<script src="js/render.js"></script>
+<script src="js/modals.js"></script>
+<script src="js/export.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
